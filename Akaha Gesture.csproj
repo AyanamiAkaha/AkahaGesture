@@ -93,6 +93,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="WindowRestorerService.cs" />
     <Compile Include="StopCommand.cs" />
     <Compile Include="StartCommand.cs" />
     <Compile Include="SelectFilesCommand.cs" />
