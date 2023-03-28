@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Akaha_Gesture.Stats;
+using System.Data.Entity;
 using System.Windows;
 
 namespace Akaha_Gesture {
@@ -11,5 +7,8 @@ namespace Akaha_Gesture {
     /// App.xaml の相互作用ロジック
     /// </summary>
     public partial class App : Application {
+        protected override void OnStartup(StartupEventArgs e) {
+            base.OnStartup(e);
+        }
     }
 }
