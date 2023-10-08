@@ -20,7 +20,7 @@ namespace Akaha_Gesture {
             this.model = model;
         }
 
-        public bool CanExecute(object parameter) => true;
+        public bool CanExecute(object parameter) => model != null && !model.isStarted;
         public void Execute(object parameter) {
             model.sessionImages.Clear();
             var remaining = new List<string>(model.fileNames);

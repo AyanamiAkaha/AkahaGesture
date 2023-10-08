@@ -7,6 +7,15 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    <Window.InputBindings>
+        <!-- next/prev buttons -->
+        <KeyBinding Key="Right" Command="{Binding nextImage}"/>
+        <KeyBinding Key="Left" Command="{Binding prevImage}"/>
+        <!-- start/stop -->
+        <KeyBinding Key="Return" Command="{Binding startCommand}"/>
+        <KeyBinding Key="Space" Command="{Binding startCommand}"/>
+        <KeyBinding Key="Esc" Command="{Binding stopCommand}"/>
+    </Window.InputBindings>
     <Window.DataContext>
         <local:AkahaGestureModel />
     </Window.DataContext>
@@ -17,7 +26,8 @@
         <Border DockPanel.Dock="Top">
             <DockPanel Margin="10 5">
                 <Button Command="{Binding selectFilesCommand, Mode=OneWay}" Padding="10 0" Margin="0 0 50 0" IsEnabled="{Binding notStarted}">Open</Button>
-                <ComboBox Width="50" VerticalAlignment="Center" SelectedValue="{Binding Path=secondsPerImage, Mode=TwoWay}" IsEnabled="{Binding notStarted}">
+                <CheckBox IsChecked="{Binding autoMode, Mode=TwoWay}" IsEnabled="{Binding notStarted}" VerticalAlignment="Center"/>
+                <ComboBox Width="50" VerticalAlignment="Center" SelectedValue="{Binding Path=secondsPerImage, Mode=TwoWay}" IsEnabled="{Binding selectTimeEnabled}">
                     <ComboBox.ItemsSource>
                         <x:Array Type="{x:Type sys:Int32}">
                             <sys:Int32>5</sys:Int32>
@@ -47,6 +57,12 @@
                 <TextBlock Margin="10 0" VerticalAlignment="Center">images</TextBlock>
                 <Button DockPanel.Dock="Right" MaxWidth="100" HorizontalAlignment="Right" Padding="10 0" Visibility="{Binding notStarted, Converter={StaticResource b2v}}" Command="{Binding startCommand}">▶ Start</Button>
                 <Button DockPanel.Dock="Right" MaxWidth="100" HorizontalAlignment="Right" Padding="10 0" Visibility="{Binding isStarted, Converter={StaticResource b2v}}" Command="{Binding stopCommand}">■ Stop</Button>
+            </DockPanel>
+        </Border>
+        <Border DockPanel.Dock="Bottom">
+            <DockPanel Margin="5 0">
+                <Button IsEnabled="{Binding nextPrevEnabled}" DockPanel.Dock="Left" MaxWidth="100" HorizontalAlignment="Left" Padding="10 0" Command="{Binding prevImage}">&lt;&lt;</Button>
+                <Button DockPanel.Dock="Right" MaxWidth="100" HorizontalAlignment="Right" Padding="10 0" Command="{Binding nextImage}" IsEnabled="{Binding nextPrevEnabled}">&gt;&gt;</Button>
             </DockPanel>
         </Border>
         <Border DockPanel.Dock="Bottom">

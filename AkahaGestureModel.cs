@@ -20,12 +20,27 @@ namespace Akaha_Gesture {
             }
         }
 
+        private bool _autoMode = true;
+        public bool autoMode {
+            get => _autoMode;
+            set {
+                _autoMode = value;
+                onPropertyChanged("manualMode");
+                onPropertyChanged("selectTimeEnabled");
+                onPropertyChanged("nextPrevEnabled");
+            }
+        }
+        public bool manualMode => !autoMode;
+        public bool selectTimeEnabled => !manualMode && !started;
+        public bool nextPrevEnabled => manualMode && started;
         public bool notStarted => !started;
         public bool isStarted => started;
 
         public ICommand selectFilesCommand { get; private set; }
         public ICommand startCommand { get; private set; }
         public ICommand stopCommand { get; private set; }
+        public ICommand nextImage { get; private set; }
+        public ICommand prevImage { get; private set; }
 
         public ObservableCollection<string> sessionImages { get; private set; }
         private int? _currentImageIndex;
@@ -69,6 +84,8 @@ namespace Akaha_Gesture {
             this.selectFilesCommand = new SelectFilesComamnd(this);
             this.startCommand = new StartCommand(this);
             this.stopCommand = new StopCommand(this);
+            this.nextImage = new NextImageCommand(this);
+            this.prevImage = new PrevImageCommand(this);
         }
 
         public void Start() {
@@ -77,10 +94,12 @@ namespace Akaha_Gesture {
             this.currentImageStarted = DateTime.UtcNow;
             this.currentImageIndex = 0;
             this.started = true;
-            timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
-            timer.Tick += new EventHandler(onTick);
-            timer.Start();
+            if (autoMode) {
+                timer = new DispatcherTimer();
+                timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
+                timer.Tick += new EventHandler(onTick);
+                timer.Start();
+            }
         }
 
         private void onTick(object sender, EventArgs e) {
@@ -106,6 +125,13 @@ namespace Akaha_Gesture {
             } else {
                 this.currentImageStarted = DateTime.UtcNow;
                 this.currentImageIndex++;
+            }
+        }
+
+        public void PrevImage() {
+            if(!this.currentImageIndex.HasValue) return;
+            if(this.currentImageIndex > 0) {
+                this.currentImageIndex--;
             }
         }
 
