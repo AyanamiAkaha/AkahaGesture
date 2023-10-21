@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Threading;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -18,6 +19,18 @@ namespace Akaha_Gesture {
                 onPropertyChanged("isStarted");
                 onPropertyChanged("notStarted");
             }
+        }
+        private bool _isCountdown = false;
+        public bool isCountdown {
+            get => _isCountdown;
+            private set {
+                _isCountdown = value;
+                onPropertyChanged("isCountdown");
+                onPropertyChanged("isRunning");
+            }
+        }
+        public bool isRunning {
+            get => started && !isCountdown;
         }
 
         private bool _autoMode = true;
@@ -72,6 +85,21 @@ namespace Akaha_Gesture {
             }
         }
         DispatcherTimer timer = null;
+        DispatcherTimer countdownTimer = null;
+        private int _countdown;
+        private int countdown {
+            get => _countdown;
+            set {
+                _countdown = value;
+                onPropertyChanged("countdownText");
+            }
+        }
+
+        public string countdownText {
+            get {
+                return countdown.ToString();
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -94,11 +122,26 @@ namespace Akaha_Gesture {
             this.currentImageStarted = DateTime.UtcNow;
             this.currentImageIndex = 0;
             this.started = true;
-            if (autoMode) {
-                timer = new DispatcherTimer();
-                timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
-                timer.Tick += new EventHandler(onTick);
-                timer.Start();
+            this.isCountdown = true;
+            countdown = 3;
+            countdownTimer = new DispatcherTimer();
+            countdownTimer.Interval = new TimeSpan(0, 0, 0, 1, 0);
+            countdownTimer.Tick += new EventHandler(onCountdownTick);
+            countdownTimer.Start();
+        }
+
+        private void onCountdownTick(object sender, EventArgs e) {
+            countdown--;
+            if(countdown <= 0) {
+                isCountdown = false;
+                countdownTimer.Stop();
+                countdownTimer = null;
+                if (autoMode) {
+                    timer = new DispatcherTimer();
+                    timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
+                    timer.Tick += new EventHandler(onTick);
+                    timer.Start();
+                }
             }
         }
 

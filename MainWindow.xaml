@@ -71,16 +71,23 @@
                 <ProgressBar Height="5" Value="{Binding currentImageProgress, Mode=OneWay}" Margin="5 0 0 0"/>
             </DockPanel>
         </Border>
-        <Border>
-            <Image
-                Margin="10 5"
-                Source="{Binding currentImage, Mode=OneWay, NotifyOnSourceUpdated=True}"
-                Visibility="{Binding isStarted, Mode=OneWay, NotifyOnSourceUpdated=True, Converter={StaticResource b2v}}"
-                Stretch="Uniform" 
-                StretchDirection="Both"
-                VerticalAlignment="Stretch"
-                HorizontalAlignment="Stretch"
-            />
-        </Border>
+        <Viewbox>
+            <StackPanel>
+                <TextBlock 
+                    Text="{Binding countdownText, Mode=OneWay, NotifyOnSourceUpdated=True}" 
+                    Visibility="{Binding isCountdown, Mode=OneWay, NotifyOnSourceUpdated=True, Converter={StaticResource b2v}}" 
+                    FontSize="300" HorizontalAlignment="Center" 
+                    VerticalAlignment="Center"/>
+                <Image
+                    Margin="10 5"
+                    Source="{Binding currentImage, Mode=OneWay, NotifyOnSourceUpdated=True}"
+                    Visibility="{Binding isRunning, Mode=OneWay, NotifyOnSourceUpdated=True, Converter={StaticResource b2v}}"
+                    Stretch="Uniform" 
+                    StretchDirection="Both"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                />
+            </StackPanel>
+        </Viewbox>
     </DockPanel>
 </Window>
