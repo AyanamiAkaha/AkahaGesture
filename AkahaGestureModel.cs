@@ -1,16 +1,37 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Threading;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Threading;
+using System.IO;
+// using System.Text.Json;
+using System.Collections;
 
-namespace Akaha_Gesture {
+namespace Akaha_Gesture
+{
     public class AkahaGestureModel : INotifyPropertyChanged {
-        public ObservableCollection<string> fileNames { get; private set; }
-        public int secondsPerImage { get; set; }
-        public int imageCount { get; set; }
+        public List<string> fileNames { get; private set; }
+        private int _secondsPerImage;
+        public int secondsPerImage {
+            get => _secondsPerImage;
+            set {
+                _secondsPerImage = value;
+                onPropertyChanged("secondsPerImage");
+                savePref("secondsPerImage", value);
+            }
+        }
+        private int _imageCount;
+        public int imageCount {
+            get => _imageCount;
+            set {
+                _imageCount = value;
+                if(value != 0) {
+                    onPropertyChanged("imageCount");
+                    savePref("imageCount", value);
+                }
+            }
+        }
         private bool _started;
         private bool started {
             get => _started;
@@ -38,9 +59,11 @@ namespace Akaha_Gesture {
             get => _autoMode;
             set {
                 _autoMode = value;
+                onPropertyChanged("autoMode");
                 onPropertyChanged("manualMode");
                 onPropertyChanged("selectTimeEnabled");
                 onPropertyChanged("nextPrevEnabled");
+                savePref("autoMode", value ? 1 : 0);
             }
         }
         public bool manualMode => !autoMode;
@@ -103,17 +126,62 @@ namespace Akaha_Gesture {
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public AkahaGestureModel() {
-            this.fileNames = new ObservableCollection<string>();
-            this.sessionImages = new ObservableCollection<string>();
-            this.secondsPerImage = 60;
-            this.imageCount = 10;
+        readonly static string appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AkahaGesture");
+        readonly static string configFilePath = Path.Combine(appDataPath, "config.txt");
+        readonly static string lastImagesFilePath = Path.Combine(appDataPath, "lastImages.txt");
 
+        public AkahaGestureModel() {
+            this.fileNames = new List<string>();
+            this.sessionImages = new ObservableCollection<string>();
             this.selectFilesCommand = new SelectFilesComamnd(this);
             this.startCommand = new StartCommand(this);
             this.stopCommand = new StopCommand(this);
             this.nextImage = new NextImageCommand(this);
             this.prevImage = new PrevImageCommand(this);
+            LoadPreferences();
+        }
+
+        private void savePref(string pref, int value) {
+            try {
+                var brandKey = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"SOFTWARE\AkahaSoftware");
+                var key = brandKey.CreateSubKey("AkahaGesture");
+                key.SetValue(pref, value, Microsoft.Win32.RegistryValueKind.DWord);
+                key.Close();
+                brandKey.Close();
+            } catch(Exception e) {
+                Console.Error.WriteLine(e);
+            }
+        }
+
+        public void SaveLastImages() {
+            try {
+                Directory.CreateDirectory(appDataPath);
+                File.WriteAllLines(lastImagesFilePath, this.fileNames);
+            } catch(Exception e) {
+                Console.Error.WriteLine(e);
+            }
+        }
+
+        private void LoadPreferences() {
+            string configFilePath = Path.Combine(appDataPath, "config.txt");
+            try {
+                var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"SOFTWARE\AkahaSoftware\AkahaGesture");
+                this.secondsPerImage = (int)key.GetValue("secondsPerImage", 60);
+                this.imageCount = (int)key.GetValue("imageCount", 10);
+                this.autoMode = (int)key.GetValue("autoMode", 1) == 1;
+                key.Close();
+            } catch(Exception e) {
+                Console.Error.WriteLine(e);
+            }
+            string lastImagesFilePath = Path.Combine(appDataPath, "lastImages.txt");
+            if (File.Exists(lastImagesFilePath)) {
+                string[] lines = File.ReadAllLines(lastImagesFilePath);
+                foreach (string line in lines) {
+                    if (File.Exists(line)) {
+                        this.fileNames.Add(line);
+                    }
+                }
+            }
         }
 
         public void Start() {

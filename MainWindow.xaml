@@ -26,8 +26,8 @@
         <Border DockPanel.Dock="Top">
             <DockPanel Margin="10 5">
                 <Button Command="{Binding selectFilesCommand, Mode=OneWay}" Padding="10 0" Margin="0 0 50 0" IsEnabled="{Binding notStarted}">Open</Button>
-                <CheckBox IsChecked="{Binding autoMode, Mode=TwoWay}" IsEnabled="{Binding notStarted}" VerticalAlignment="Center"/>
-                <ComboBox Width="50" VerticalAlignment="Center" SelectedValue="{Binding Path=secondsPerImage, Mode=TwoWay}" IsEnabled="{Binding selectTimeEnabled}">
+                <CheckBox IsChecked="{Binding autoMode, Mode=TwoWay, NotifyOnSourceUpdated=True}" IsEnabled="{Binding notStarted}" VerticalAlignment="Center"/>
+                <ComboBox Width="50" VerticalAlignment="Center" SelectedValue="{Binding Path=secondsPerImage, Mode=TwoWay, NotifyOnSourceUpdated=True}" IsEnabled="{Binding selectTimeEnabled}">
                     <ComboBox.ItemsSource>
                         <x:Array Type="{x:Type sys:Int32}">
                             <sys:Int32>5</sys:Int32>
@@ -42,7 +42,7 @@
                     </ComboBox.ItemsSource>
                 </ComboBox>
                 <TextBlock Margin="10 0" VerticalAlignment="Center">seconds per image</TextBlock>
-                <ComboBox Width="50" VerticalAlignment="Center" SelectedItem="{Binding Path=imageCount, Mode=TwoWay}" IsEnabled="{Binding notStarted}">
+                <ComboBox Width="50" VerticalAlignment="Center" SelectedItem="{Binding Path=imageCount, Mode=TwoWay, NotifyOnSourceUpdated=True}" IsEnabled="{Binding notStarted}">
                     <ComboBox.ItemsSource>
                         <x:Array Type="{x:Type sys:Int32}">
                             <sys:Int32>5</sys:Int32>
