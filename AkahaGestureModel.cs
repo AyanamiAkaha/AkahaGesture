@@ -37,6 +37,7 @@ namespace Akaha_Gesture
             get => _started;
             set {
                 _started = value;
+                onPropertyChanged("isRunning");
                 onPropertyChanged("isStarted");
                 onPropertyChanged("notStarted");
             }
@@ -75,15 +76,15 @@ namespace Akaha_Gesture
         public ICommand selectFilesCommand { get; private set; }
         public ICommand startCommand { get; private set; }
         public ICommand stopCommand { get; private set; }
-        public ICommand nextImage { get; private set; }
-        public ICommand prevImage { get; private set; }
+        public ICommand nextImageCommand { get; private set; }
+        public ICommand prevImageCommand { get; private set; }
 
         public ObservableCollection<string> sessionImages { get; private set; }
-        private int? _currentImageIndex;
+        private int? m_currentImageIndex;
         private int? currentImageIndex {
-            get => _currentImageIndex;
+            get => m_currentImageIndex;
             set {
-                _currentImageIndex = value;
+                m_currentImageIndex = value;
                 onPropertyChanged("currentImage");
                 onPropertyChanged("currentImageStr");
             }
@@ -109,11 +110,11 @@ namespace Akaha_Gesture
         }
         DispatcherTimer timer = null;
         DispatcherTimer countdownTimer = null;
-        private int _countdown;
+        private int m_countdown;
         private int countdown {
-            get => _countdown;
+            get => m_countdown;
             set {
-                _countdown = value;
+                m_countdown = value;
                 onPropertyChanged("countdownText");
             }
         }
@@ -127,7 +128,6 @@ namespace Akaha_Gesture
         public event PropertyChangedEventHandler PropertyChanged;
 
         readonly static string appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AkahaGesture");
-        readonly static string configFilePath = Path.Combine(appDataPath, "config.txt");
         readonly static string lastImagesFilePath = Path.Combine(appDataPath, "lastImages.txt");
 
         public AkahaGestureModel() {
@@ -136,9 +136,9 @@ namespace Akaha_Gesture
             this.selectFilesCommand = new SelectFilesComamnd(this);
             this.startCommand = new StartCommand(this);
             this.stopCommand = new StopCommand(this);
-            this.nextImage = new NextImageCommand(this);
-            this.prevImage = new PrevImageCommand(this);
-            LoadPreferences();
+            this.nextImageCommand = new NextImageCommand(this);
+            this.prevImageCommand = new PrevImageCommand(this);
+            loadPreferences();
         }
 
         private void savePref(string pref, int value) {
@@ -153,7 +153,7 @@ namespace Akaha_Gesture
             }
         }
 
-        public void SaveLastImages() {
+        public void saveLastImages() {
             try {
                 Directory.CreateDirectory(appDataPath);
                 File.WriteAllLines(lastImagesFilePath, this.fileNames);
@@ -162,8 +162,7 @@ namespace Akaha_Gesture
             }
         }
 
-        private void LoadPreferences() {
-            string configFilePath = Path.Combine(appDataPath, "config.txt");
+        private void loadPreferences() {
             try {
                 var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"SOFTWARE\AkahaSoftware\AkahaGesture");
                 this.secondsPerImage = (int)key.GetValue("secondsPerImage", 60);
@@ -184,9 +183,9 @@ namespace Akaha_Gesture
             }
         }
 
-        public void Start() {
+        public void start() {
             if(this.sessionImages.Count <= 0) return;
-            Stop();
+            stop();
             this.currentImageStarted = DateTime.UtcNow;
             this.currentImageIndex = 0;
             this.started = true;
@@ -216,12 +215,12 @@ namespace Akaha_Gesture
         private void onTick(object sender, EventArgs e) {
             Console.WriteLine(currentImageProgress);
             if(currentImageProgress >= 100) {
-                this.NextImage();
+                this.nextImage();
             }
             this.onPropertyChanged("currentImageProgress");
         }
 
-        public void Stop() {
+        public void stop() {
             this.started = false;
             this.currentImageIndex = null;
             if(timer != null) {
@@ -229,17 +228,17 @@ namespace Akaha_Gesture
                 timer = null;
             }
         }
-        public void NextImage() {
+        public void nextImage() {
             if(!this.currentImageIndex.HasValue) return;
             if(this.currentImageIndex >= this.sessionImages.Count-1) {
-                Stop();
+                stop();
             } else {
                 this.currentImageStarted = DateTime.UtcNow;
                 this.currentImageIndex++;
             }
         }
 
-        public void PrevImage() {
+        public void prevImage() {
             if(!this.currentImageIndex.HasValue) return;
             if(this.currentImageIndex > 0) {
                 this.currentImageIndex--;

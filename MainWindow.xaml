@@ -9,8 +9,8 @@
         Title="MainWindow" Height="450" Width="800">
     <Window.InputBindings>
         <!-- next/prev buttons -->
-        <KeyBinding Key="Right" Command="{Binding nextImage}"/>
-        <KeyBinding Key="Left" Command="{Binding prevImage}"/>
+        <KeyBinding Key="Right" Command="{Binding nextImageCommand}"/>
+        <KeyBinding Key="Left" Command="{Binding prevImageCommand}"/>
         <!-- start/stop -->
         <KeyBinding Key="Return" Command="{Binding startCommand}"/>
         <KeyBinding Key="Space" Command="{Binding startCommand}"/>

@@ -31,7 +31,7 @@ namespace Akaha_Gesture {
                 remaining.RemoveAt(idx);
                 model.sessionImages.Add(s);
             }
-            model.Start();
+            model.start();
         }
     }
 }

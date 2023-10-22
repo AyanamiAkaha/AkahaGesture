@@ -19,7 +19,7 @@ namespace Akaha_Gesture {
 
         public bool CanExecute(object parameter) => model != null && model.isStarted;
         public void Execute(object parameter) {
-            model.Stop();
+            model.stop();
         }
     }
 }

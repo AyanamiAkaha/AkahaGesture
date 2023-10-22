@@ -26,7 +26,7 @@ namespace Akaha_Gesture {
             if(result == true) {
                 model.fileNames.Clear();
                 model.fileNames.AddRange(dialog.FileNames);
-                model.SaveLastImages();
+                model.saveLastImages();
             }
         }
     }

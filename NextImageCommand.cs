@@ -17,7 +17,7 @@ namespace Akaha_Gesture
 
         public bool CanExecute(object parameter) => model != null && model.manualMode && model.isStarted;
         public void Execute(object parameter) {
-            model.NextImage();
+            model.nextImage();
         }
     }
 }
