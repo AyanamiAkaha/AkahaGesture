@@ -7,6 +7,7 @@ using System.Windows.Threading;
 using System.IO;
 // using System.Text.Json;
 using System.Collections;
+using System.Linq;
 
 namespace Akaha_Gesture
 {
@@ -222,12 +223,17 @@ namespace Akaha_Gesture
 
         public void stop() {
             this.started = false;
+            int? lastIdx = this.currentImageIndex;
             this.currentImageIndex = null;
             if(timer != null) {
                 timer.Stop();
                 timer = null;
             }
+            if(lastIdx.HasValue) {
+                showSummary(this.sessionImages.ToList().GetRange(0, lastIdx.Value+1));
+            }
         }
+
         public void nextImage() {
             if(!this.currentImageIndex.HasValue) return;
             if(this.currentImageIndex >= this.sessionImages.Count-1) {
@@ -245,11 +251,13 @@ namespace Akaha_Gesture
             }
         }
 
+        public void showSummary(List<string> images) {
+            var summary = new SummaryWindow(images);
+            summary.Show();
+        }
+
         private void onPropertyChanged(string propertyName = null) {
-            var handler = PropertyChanged;
-            if (handler != null) {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

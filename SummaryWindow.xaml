@@ -1,0 +1,33 @@
+﻿<Window x:Class="Akaha_Gesture.SummaryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Akaha_Gesture"
+        mc:Ignorable="d"
+        Title="Akaha Gesture - Session Summary" MinHeight="600" MinWidth="800">
+    <Window.DataContext>
+        <local:SummaryWindowModel/>
+    </Window.DataContext>
+    <DockPanel LastChildFill="True">
+        <Border DockPanel.Dock="Bottom">
+            <Button Content="Close" Click="closeClick" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="50"/>
+        </Border>
+        <Border DockPanel.Dock="Top">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <ItemsControl ItemsSource="{Binding sessionImages}" VerticalAlignment="Top" Margin="{Binding pageMargin}" ScrollViewer.CanContentScroll="True">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding}" MaxHeight="{Binding imgMaxWidth}" MaxWidth="{Binding imgMaxHeight}" Margin="{Binding margins}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
+    </DockPanel>
+</Window>
