@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Documents;
 
 namespace Akaha_Gesture
 {
@@ -11,27 +10,33 @@ namespace Akaha_Gesture
     {
         public SummaryWindow(List<string> images)
         {
+            var hBorder = 2*SystemParameters.FixedFrameVerticalBorderWidth + 50;
+            var vBorder = SystemParameters.CaptionHeight + SystemParameters.FixedFrameHorizontalBorderHeight + 50;
+            var maxHeight = SystemParameters.WorkArea.Height - vBorder;
+            var maxWidth = SystemParameters.WorkArea.Width - hBorder;
+            var desiredWidth = maxHeight / 0.707;
+            var desiredHeight = maxWidth * 0.707;
+            Top = 40;
+            if(desiredWidth > maxWidth) {
+                Width = maxWidth;
+                Height = desiredHeight + hBorder;
+            } else {
+                Width = desiredWidth + vBorder;
+                Height = maxHeight;
+            }
+            ResizeMode = ResizeMode.NoResize;
+            Owner = Application.Current.MainWindow;
             InitializeComponent();
             SummaryWindowModel model = (SummaryWindowModel)DataContext;
             foreach(string img in images) {
                 model.sessionImages.Add(img);
             }
-            var maxHeight = SystemParameters.WorkArea.Height;
-            var maxWidth = SystemParameters.WorkArea.Width;
-            var desiredWidth = maxHeight * 0.707;
-            var desiredHeight = maxWidth / 0.707;
-            if(desiredWidth > maxWidth) {
-                Width = maxWidth;
-                Height = desiredHeight;
-            } else {
-                Width = desiredWidth;
-                Height = maxHeight;
-            }
-            ResizeMode = ResizeMode.NoResize;
             // Aiming at 2 rows of 5 images on an A4 paper, which is my typical gesture drawing session
             // if there's more, they'll overflow to next rows
-            model.imgMaxWidth = (Width - 2*model.pageMargin - 4*model.imageMarginX) / 5;
-            model.imgMaxHeight = (Height - 2*model.pageMargin - model.imageMarginY) / 2;
+            double scrollWidth = images.Count > 10 ? SystemParameters.VerticalScrollBarWidth : 0;
+            const double closePanelHeight = 100;
+            model.imgMaxWidth = (Width - 2*model.pageMargin - 10*model.imageMarginX - hBorder - scrollWidth)/5;
+            model.imgMaxHeight = (Height - 2*model.pageMargin - 4*model.imageMarginY - vBorder - closePanelHeight)/2;
         }
 
         private void closeClick(object sender, RoutedEventArgs e)

@@ -5,25 +5,38 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Akaha_Gesture"
         mc:Ignorable="d"
-        Title="Akaha Gesture - Session Summary" MinHeight="600" MinWidth="800">
+        Title="Akaha Gesture - Session Summary" MinHeight="600" MinWidth="800" Padding="0" Margin="0">
     <Window.DataContext>
         <local:SummaryWindowModel/>
     </Window.DataContext>
-    <DockPanel LastChildFill="True">
-        <Border DockPanel.Dock="Bottom">
-            <Button Content="Close" Click="closeClick" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="50"/>
+    <DockPanel LastChildFill="True" Margin="0">
+        <Border DockPanel.Dock="Bottom" Margin="0" Padding="0" x:Name="ClosePanel" Height="100">
+            <Button Content="Close" Click="closeClick" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0" Padding="10 5"/>
         </Border>
-        <Border DockPanel.Dock="Top">
-            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                <ItemsControl ItemsSource="{Binding sessionImages}" VerticalAlignment="Top" Margin="{Binding pageMargin}" ScrollViewer.CanContentScroll="True">
+        <Border DockPanel.Dock="Top" Margin="0" Padding="0">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0" Padding="0">
+                <ItemsControl
+                    ItemsSource="{Binding sessionImages}"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Center"
+                    Margin="{Binding pageMargin}"
+                    ScrollViewer.CanContentScroll="True"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Padding="0">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal" />
+                            <WrapPanel Orientation="Horizontal" Margin="0" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Image Source="{Binding}" MaxHeight="{Binding imgMaxWidth}" MaxWidth="{Binding imgMaxHeight}" Margin="{Binding margins}"/>
+                            <Image
+                                Source="{Binding}"
+                                Stretch="Uniform"
+                                Width="{Binding DataContext.imgMaxWidth, Mode=OneWay, NotifyOnSourceUpdated=True, RelativeSource={RelativeSource AncestorType=Window}}"
+                                Height="{Binding DataContext.imgMaxHeight, Mode=OneWay, NotifyOnSourceUpdated=True, RelativeSource={RelativeSource AncestorType=Window}}"
+                                Margin="{Binding DataContext.margins, Mode=OneWay, NotifyOnSourceUpdated=True, RelativeSource={RelativeSource AncestorType=Window}}" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

@@ -70,7 +70,7 @@ namespace Akaha_Gesture
         }
         public bool manualMode => !autoMode;
         public bool selectTimeEnabled => !manualMode && !started;
-        public bool nextPrevEnabled => manualMode && started;
+        public bool nextPrevEnabled => manualMode && isRunning;
         public bool notStarted => !started;
         public bool isStarted => started;
 
