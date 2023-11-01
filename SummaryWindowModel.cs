@@ -68,7 +68,7 @@ namespace Akaha_Gesture {
         }
 
         public string sessionStats {
-            get => string.Format("Session {0} - {1} images in {2:hh\\:mm\\:ss}", lastSession.start, lastSession.numImages, lastSession.duration);
+            get => string.Format("Session {0} - {1} of {2} images in {3:hh\\:mm\\:ss}", lastSession.start, lastSession.images.Count, lastSession.numImages, lastSession.duration);
         }
 
         public SummaryWindowModel() {

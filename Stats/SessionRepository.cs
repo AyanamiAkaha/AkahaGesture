@@ -54,7 +54,7 @@ namespace Akaha_Gesture.Stats
                 connection.Open();
                 using (var db = new AkahaGestureDbContext(connection))
                 {
-                    return db.Sessions.OrderByDescending(s => s.start).FirstOrDefault();
+                    return db.Sessions.Include("sessionImages.image").OrderByDescending(s => s.start).FirstOrDefault();
                 }
             }
         }

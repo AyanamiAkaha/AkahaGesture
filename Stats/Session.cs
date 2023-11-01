@@ -10,7 +10,7 @@ namespace Akaha_Gesture.Stats {
         public DateTime start { get; private set; }
         public DateTime end { get; set; }
         [Column("n_images")]
-        public int numImages { get; private set; }
+        public int numImages { get; set; }
         [Column("sec_per_image")]
         public int secondsPerImage { get; private set; }
         public string summary { get; private set; }

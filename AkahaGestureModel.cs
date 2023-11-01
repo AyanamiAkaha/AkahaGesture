@@ -191,6 +191,7 @@ namespace Akaha_Gesture
             stop();
             this.started = true;
             this.isCountdown = true;
+            lastSession = null;
             countdown = 3;
             countdownTimer = new DispatcherTimer();
             countdownTimer.Interval = new TimeSpan(0, 0, 0, 1, 0);
@@ -207,7 +208,7 @@ namespace Akaha_Gesture
                 this.currentImageIndex = 0;
                 currentImageStarted = DateTime.UtcNow;
                 lastSession = new Session(DateTime.UtcNow, sessionImages.Count, autoMode ? secondsPerImage : 0);
-                lastSession.AddImages(from img in sessionImages select new Image { path = img });
+                lastSession.AddImage(new Image { path = sessionImages[this.currentImageIndex.Value] });
                 if (autoMode) {
                     timer = new DispatcherTimer();
                     timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
@@ -247,6 +248,7 @@ namespace Akaha_Gesture
             } else {
                 this.currentImageStarted = DateTime.UtcNow;
                 this.currentImageIndex++;
+                lastSession.AddImage(new Image { path = sessionImages[this.currentImageIndex.Value] });
             }
         }
 
