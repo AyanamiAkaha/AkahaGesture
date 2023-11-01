@@ -11,7 +11,10 @@
     </Window.DataContext>
     <DockPanel LastChildFill="True" Margin="0">
         <Border DockPanel.Dock="Bottom" Margin="0" Padding="0" x:Name="ClosePanel" Height="100">
-            <Button Content="Close" Click="closeClick" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0" Padding="10 5"/>
+            <StackPanel>
+                <Button Content="Close" Click="closeClick" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0" Padding="10 5"/>
+                <TextBlock Text="{Binding sessionStats}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0" Padding="0 5"/>
+            </StackPanel>
         </Border>
         <Border DockPanel.Dock="Top" Margin="0" Padding="0">
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0" Padding="0">

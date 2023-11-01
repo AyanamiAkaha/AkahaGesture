@@ -1,12 +1,14 @@
 ﻿using System.Data.Common;
 using System.Data.Entity;
-using System.Linq;
 
 namespace Akaha_Gesture.Stats {
     public class AkahaGestureDbContext : DbContext {
         public DbSet<Session> Sessions { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<SessionImage> SessionImages { get; set; }
+
+        // create in-memory sqlite database - required for generating migration
+        public AkahaGestureDbContext() : base("Data Source=:memory:;") {}
 
         public AkahaGestureDbContext(DbConnection connection) : base(connection, false) {}
         public AkahaGestureDbContext(string connectionString) : base(connectionString) {}

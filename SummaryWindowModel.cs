@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using Akaha_Gesture.Stats;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 
 namespace Akaha_Gesture {
     public class SummaryWindowModel : INotifyPropertyChanged {
+
+        private SessionRepository sessionRepository = new SessionRepository();
 
         public ObservableCollection<string> sessionImages { get; set; }
         private double m_imgMaxWidth;
@@ -52,6 +55,20 @@ namespace Akaha_Gesture {
 
         public Thickness margins {
             get => new Thickness(imageMarginX, imageMarginY, imageMarginX, imageMarginY);
+        }
+
+        private Session m_session;
+        public Session lastSession {
+            get {
+                if (m_session == null) {
+                    m_session = sessionRepository.getLastSession();
+                }
+                return m_session;
+            }
+        }
+
+        public string sessionStats {
+            get => string.Format("Session {0} - {1} images in {2:hh\\:mm\\:ss}", lastSession.start, lastSession.numImages, lastSession.duration);
         }
 
         public SummaryWindowModel() {

@@ -8,6 +8,7 @@ namespace Akaha_Gesture.Stats {
     public class Session {
         [Key]
         public DateTime start { get; private set; }
+        public DateTime end { get; set; }
         [Column("n_images")]
         public int numImages { get; private set; }
         [Column("sec_per_image")]
@@ -36,6 +37,11 @@ namespace Akaha_Gesture.Stats {
             }
         }
 
+        [NotMapped]
+        public TimeSpan duration {
+            get => end - start;
+        }
+
         private Session() { }
 
         public Session(DateTime start, int numImages, int secondsPerImage) {
@@ -51,6 +57,12 @@ namespace Akaha_Gesture.Stats {
                 this.sessionImages = new List<SessionImage>();
             }
             this.sessionImages.Add(new SessionImage { session = this, image = img, order = sessionImages.Count() });
+        }
+
+        public void AddImages(IEnumerable<Image> imgs) {
+            foreach(var img in imgs) {
+                AddImage(img);
+            }
         }
 
         public override string ToString()

@@ -5,9 +5,8 @@ using System.ComponentModel;
 using System.Windows.Input;
 using System.Windows.Threading;
 using System.IO;
-// using System.Text.Json;
-using System.Collections;
 using System.Linq;
+using Akaha_Gesture.Stats;
 
 namespace Akaha_Gesture
 {
@@ -131,6 +130,9 @@ namespace Akaha_Gesture
         readonly static string appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "AkahaGesture");
         readonly static string lastImagesFilePath = Path.Combine(appDataPath, "lastImages.txt");
 
+        private SessionRepository sessionRepository = new SessionRepository();
+        private Session lastSession = null;
+
         public AkahaGestureModel() {
             this.fileNames = new List<string>();
             this.sessionImages = new ObservableCollection<string>();
@@ -187,8 +189,6 @@ namespace Akaha_Gesture
         public void start() {
             if(this.sessionImages.Count <= 0) return;
             stop();
-            this.currentImageStarted = DateTime.UtcNow;
-            this.currentImageIndex = 0;
             this.started = true;
             this.isCountdown = true;
             countdown = 3;
@@ -204,6 +204,10 @@ namespace Akaha_Gesture
                 isCountdown = false;
                 countdownTimer.Stop();
                 countdownTimer = null;
+                this.currentImageIndex = 0;
+                currentImageStarted = DateTime.UtcNow;
+                lastSession = new Session(DateTime.UtcNow, sessionImages.Count, autoMode ? secondsPerImage : 0);
+                lastSession.AddImages(from img in sessionImages select new Image { path = img });
                 if (autoMode) {
                     timer = new DispatcherTimer();
                     timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
@@ -230,6 +234,8 @@ namespace Akaha_Gesture
                 timer = null;
             }
             if(lastIdx.HasValue) {
+                lastSession.end = DateTime.UtcNow;
+                sessionRepository.addSession(lastSession);
                 showSummary(this.sessionImages.ToList().GetRange(0, lastIdx.Value+1));
             }
         }

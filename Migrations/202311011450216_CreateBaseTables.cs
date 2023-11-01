@@ -1,7 +1,8 @@
-﻿using System.Data.Entity.Migrations;
-
-namespace Akaha_Gesture.Migrations
+﻿namespace Akaha_Gesture.Migrations
 {
+    using System;
+    using System.Data.Entity.Migrations;
+    
     public partial class CreateBaseTables : DbMigration
     {
         public override void Up()
@@ -20,6 +21,7 @@ namespace Akaha_Gesture.Migrations
                 c => new
                     {
                         start = c.DateTime(nullable: false),
+                        end = c.DateTime(nullable: false),
                         n_images = c.Int(nullable: false),
                         sec_per_image = c.Int(nullable: false),
                         summary = c.String(),

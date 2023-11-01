@@ -31,7 +31,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <AutorunEnabled>true</AutorunEnabled>
-    <ApplicationRevision>5</ApplicationRevision>
+    <ApplicationRevision>6</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -150,9 +150,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Migrations\202303282220445_CreateBaseTables.cs" />
-    <Compile Include="Migrations\202303282220445_CreateBaseTables.designer.cs">
-      <DependentUpon>202303282220445_CreateBaseTables.cs</DependentUpon>
+    <Compile Include="Migrations\202311011450216_CreateBaseTables.cs" />
+    <Compile Include="Migrations\202311011450216_CreateBaseTables.designer.cs">
+      <DependentUpon>202311011450216_CreateBaseTables.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="NextImageCommand.cs" />
@@ -162,6 +162,7 @@
     <Compile Include="Stats\Session.cs" />
     <Compile Include="Stats\SessionImage.cs" />
     <Compile Include="Stats\SQLiteDbConfiguration.cs" />
+    <Compile Include="Stats\SessionRepository.cs" />
     <Compile Include="SummaryWindowModel.cs" />
     <Compile Include="Tests\SessionTest.cs" />
     <Compile Include="SummaryWindow.xaml.cs">
@@ -194,8 +195,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Migrations\202303282220445_CreateBaseTables.resx">
-      <DependentUpon>202303282220445_CreateBaseTables.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202311011450216_CreateBaseTables.resx">
+      <DependentUpon>202311011450216_CreateBaseTables.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
