@@ -201,19 +201,22 @@ namespace Akaha_Gesture
 
         private void onCountdownTick(object sender, EventArgs e) {
             countdown--;
+            if (countdownTimer == null) return;
             if(countdown <= 0) {
                 isCountdown = false;
                 countdownTimer.Stop();
                 countdownTimer = null;
-                this.currentImageIndex = 0;
-                currentImageStarted = DateTime.UtcNow;
-                lastSession = new Session(DateTime.UtcNow, sessionImages.Count, autoMode ? secondsPerImage : 0);
-                lastSession.AddImage(new Image { path = sessionImages[this.currentImageIndex.Value] });
-                if (autoMode) {
-                    timer = new DispatcherTimer();
-                    timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
-                    timer.Tick += new EventHandler(onTick);
-                    timer.Start();
+                if (started) {
+                    this.currentImageIndex = 0;
+                    currentImageStarted = DateTime.UtcNow;
+                    lastSession = new Session(DateTime.UtcNow, sessionImages.Count, autoMode ? secondsPerImage : 0);
+                    lastSession.AddImage(new Image { path = sessionImages[this.currentImageIndex.Value] });
+                    if (autoMode) {
+                        timer = new DispatcherTimer();
+                        timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
+                        timer.Tick += new EventHandler(onTick);
+                        timer.Start();
+                    }
                 }
             }
         }
@@ -230,6 +233,9 @@ namespace Akaha_Gesture
             this.started = false;
             int? lastIdx = this.currentImageIndex;
             this.currentImageIndex = null;
+            isCountdown = false;
+            countdownTimer?.Stop();
+            countdownTimer = null;
             if(timer != null) {
                 timer.Stop();
                 timer = null;
